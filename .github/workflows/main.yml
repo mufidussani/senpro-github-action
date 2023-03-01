@@ -39,10 +39,26 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            eval "$(ssh-agent -s)"
-            ssh-add ~/.ssh/ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICqBtybAVR+1qaFGoITDeQSdZ1TPEluL883Qqjs0cq1v seniorproject-rabu@seniorproject-rabu
-            cd ~/senpro/463608/modul01/senpro-github-action
-            git restore .
-            git pull origin main
-            npm install
-            npm run build
+            eval: "$(ssh-agent -s)"
+            ssh-add ~/.ssh/senpro-ssh-19
+            echo "Cek folder project";
+            [ ! -d "/home/seniorproject-rabu/senpro/463608/modul01/senpro-github-action" ] &&
+              {
+                echo "Repository belum di-clone. Cloning...";
+                mkdir -p ~/senpro/463608/modul01;
+                cd ~/senpro/463608/modul01;
+                git clone git@github.com:aldoarya/senpro-github-action.git;
+                cd ~/senpro/463608/modul01/senpro-github-action;
+                echo "Install Package dan Build Project";
+                npm install;
+                npm run build;
+              } ||
+              {
+                echo "Repository sudah ada. Building...";
+                cd ~/senpro/463608/modul01/senpro-github-action;
+                git restore .;
+                git pull origin main;
+                echo "Install Package dan Build Project";
+                npm install;
+                npm run build;
+              }
